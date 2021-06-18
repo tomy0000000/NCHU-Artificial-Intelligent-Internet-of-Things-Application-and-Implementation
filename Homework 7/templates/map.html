@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map, geocoder;
+      var infowindow, otherwindow;
+      const MAX_RETRIES = 5;
+      var retry = 100;
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      async function placeLocation(location, index) {
+        for (let try_count = 0; try_count < MAX_RETRIES; try_count++) {
+          try {
+            await geocoder
+              .geocode({ address: location })
+              .then((results, status) => {
+                // Create marker
+                let marker = new google.maps.Marker({
+                  position: results.results[0].geometry.location.toJSON(),
+                  map: map,
+                  title: location,
+                });
+
+                infowindow = new google.maps.InfoWindow();
+                google.maps.event.addListener(marker, "click", () => {
+                  addChartWindow(marker, location);
+                });
+              });
+            break;
+          } catch (error) {
+            if (error.code === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+              retry += 100;
+              console.log("retry later", index);
+              await delay(retry);
+            } else {
+              console.error(error.message);
+              break;
+            }
+          }
+        }
+      }
+
+      async function addChartWindow(marker, location) {
+        let lightData = await getLightData(location);
+        let chartDiv = createHighChart(lightData);
+        console.log(chartDiv);
+        if (otherwindow === undefined) {
+          infowindow.setContent(chartDiv);
+          infowindow.open(map, marker);
+          otherwindow = infowindow;
+        } else {
+          otherwindow.close();
+          infowindow.setContent(chartDiv);
+          infowindow.open(map, marker);
+          otherwindow = infowindow;
+        }
+      }
+
+      async function getLightData(location) {
+        response = await fetch(`/light/${location}`);
+        return response.json();
+      }
+
+      function createHighChart(data) {
+        var value = [],
+          time = [];
+        for (i = 0; i < data.length; i++) {
+          value.push({ y: parseInt(data[i].value) });
+          time.push(data[i].time);
+        }
+
+        let chartDiv = document.createElement("div");
+        Highcharts.chart(chartDiv, {
+          title: { text: "光度變化", x: -20 },
+          subtitle: { text: data[0].address, x: -20 },
+          xAxis: {
+            title: { text: "Time" },
+            categories: time,
+            labels: { enabled: true },
+          },
+          yAxis: { title: { text: "value" } },
+          series: [{ name: "Light", data: value }],
+        });
+        return chartDiv;
+      }
+
+      function initMap() {
+        // Init map
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 24.1209446, lng: 120.6742369 },
+          zoom: 8,
+        });
+
+        // Init geocoder
+        geocoder = new google.maps.Geocoder();
+
+        fetch("/location")
+          .then((response) => {
+            return response.json();
+          })
+          .then((locations) => {
+            console.log(locations);
+            locations.forEach(placeLocation);
+          });
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDr1ZJ89RqXMszqB4mbrN10vHvtw5G5pPE&callback=initMap"
+      async
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.1.2/highcharts.min.js"
+      integrity="sha512-hmCOv5qiXVpYpzh8Rmt4ThoG14p+oCx9jWnDH5OsFO1rUHGR/h9YD/hWDjd3/fGK86QAgQqT5FALVzFQ1AsdJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </body>
+</html>
