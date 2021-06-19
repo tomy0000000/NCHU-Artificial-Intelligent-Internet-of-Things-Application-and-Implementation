@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bulma CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <title>Library Flow</title>
+
+    <style></style>
+  </head>
+  <body>
+    <!-- BEGIN -->
+    <section class="hero is-medium is-link">
+      <div class="hero-body">
+        <p class="title">Library Flow</p>
+        <p class="subtitle">See the flow 🌬, within books 📚.</p>
+      </div>
+    </section>
+    <div class="container is-max-desktop">
+      <article class="panel is-primary my-5">
+        <p class="panel-heading">{{ floor_name }}</p>
+        <p class="panel-tabs">
+          {% for floor in floors %}
+          <a
+            href="{{ url_for('floor_status', floor_id=floor.id) }}"
+            class="{{ 'is-active' if floor_name == floor.name else '' }}"
+            >{{ floor.name }}
+          </a>
+          {% endfor %}
+        </p>
+        <div class="panel-block">
+          <p class="control has-icons-left">
+            <input class="input is-primary" type="text" placeholder="Search" />
+            <span class="icon is-left">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+          </p>
+        </div>
+        {% for section in sections %}
+        <a class="panel-block">
+          <span class="panel-icon">
+            <i class="fas fa-book" aria-hidden="true"></i>
+          </span>
+          <p>{{ section.title }}</p>
+          <button class="button is-small is-rounded ml-1">
+            <span class="icon is-small">
+              <i class="fas fa-question" aria-hidden="true"></i>
+            </span>
+          </button>
+          <span
+            class="tag {{ 'is-success' if section.status < 30 else 'is-warning' if section.status < 60 else 'is-danger' }} ml-auto"
+            >{{ section.status }}</span
+          >
+        </a>
+        {% endfor %}
+      </article>
+    </div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Library Flow</strong> by
+          <a href="https://github.com/tomy0000000">Tomy Hsieh</a> and
+          <a href="https://github.com/bear3z">Eddy Tan</a>. The source code is
+          licensed
+          <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+        </p>
+      </div>
+    </footer>
+    <!-- END -->
+
+    <!-- JavaScript Tags -->
+  </body>
+</html>
