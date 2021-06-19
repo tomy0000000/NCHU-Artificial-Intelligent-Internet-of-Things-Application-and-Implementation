@@ -1,1 +1,1 @@
-web: uvicorn library_flow.main:app
+web: uvicorn library_flow.main:app --host=0.0.0.0 --port=${PORT:-5000}
