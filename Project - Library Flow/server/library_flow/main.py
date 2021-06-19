@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from typing import List
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -56,3 +57,8 @@ async def create_record(record: schemas.RecordCreate, db: Session = Depends(get_
     if db_section is None:
         raise HTTPException(status_code=404, detail="Section not found")
     return crud.create_record(db, record)
+
+
+@app.get("/record/{section_id}", response_model=List[schemas.Record])
+async def read_records(section_id: int, db: Session = Depends(get_db)):
+    return crud.get_records(db, section_id)

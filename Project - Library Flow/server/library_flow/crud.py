@@ -26,3 +26,7 @@ def create_record(db: Session, record: schemas.RecordCreate):
     db.commit()
     db.refresh(db_record)
     return db_record
+
+
+def get_records(db: Session, section_id: int):
+    return db.query(models.Record).filter(models.Record.section_id == section_id).all()
