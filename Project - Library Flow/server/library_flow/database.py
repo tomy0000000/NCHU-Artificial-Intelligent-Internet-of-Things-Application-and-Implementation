@@ -8,7 +8,10 @@ ACTUAL_DB = os.environ.get("DATABASE_URL", DEFAULT_DB).replace(
     "postgres://", "postgresql://"
 )
 
-engine = create_engine(ACTUAL_DB, connect_args={"check_same_thread": False})
+if ACTUAL_DB.startswith("sqlite"):
+    engine = create_engine(ACTUAL_DB, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(ACTUAL_DB)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
