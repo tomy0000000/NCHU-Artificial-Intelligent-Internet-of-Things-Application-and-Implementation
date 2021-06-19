@@ -12,6 +12,7 @@ Jinja2 = "^3.0.1"
 uvicorn = "^0.14.0"
 SQLAlchemy = "^1.4.18"
 psycopg2 = "^2.9.1"
+aiofiles = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 

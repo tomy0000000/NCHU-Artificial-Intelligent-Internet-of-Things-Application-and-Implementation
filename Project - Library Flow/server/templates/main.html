@@ -17,6 +17,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@creativebulma/bulma-collapsible@1.0.4/dist/css/bulma-collapsible.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <title>Library Flow</title>
 
@@ -51,21 +57,30 @@
           </p>
         </div>
         {% for section in sections %}
-        <a class="panel-block">
-          <span class="panel-icon">
-            <i class="fas fa-book" aria-hidden="true"></i>
-          </span>
-          <p>{{ section.title }}</p>
-          <button class="button is-small is-rounded ml-1">
-            <span class="icon is-small">
-              <i class="fas fa-question" aria-hidden="true"></i>
-            </span>
-          </button>
-          <span
-            class="tag {{ 'is-success' if section.status < 30 else 'is-warning' if section.status < 60 else 'is-danger' }} ml-auto"
-            >{{ section.status }}</span
+        <div>
+          <a
+            href="#{{ section.id }}-chart-div"
+            class="panel-block"
+            data-action="collapse"
           >
-        </a>
+            <span class="panel-icon">
+              <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            <p>{{ section.name }}</p>
+            <button class="button is-small is-rounded ml-1">
+              <span class="icon is-small">
+                <i class="fas fa-question" aria-hidden="true"></i>
+              </span>
+            </button>
+            <span
+              class="tag {{ 'is-success' if section.status < 30 else 'is-warning' if section.status < 60 else 'is-danger' }} ml-auto"
+              >{{ section.status }}</span
+            >
+          </a>
+        </div>
+        <div id="{{ section.id }}-chart-div" class="is-collapsible">
+          <canvas id="{{ section.id }}-chart" class="p-2" height="100"></canvas>
+        </div>
         {% endfor %}
       </article>
     </div>
@@ -84,5 +99,16 @@
     <!-- END -->
 
     <!-- JavaScript Tags -->
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@creativebulma/bulma-collapsible@1.0.4/dist/js/bulma-collapsible.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"
+      integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc="
+      crossorigin="anonymous"
+    ></script>
+    <script src="{{ url_for('static', path='js/index.js') }}"></script>
   </body>
 </html>
