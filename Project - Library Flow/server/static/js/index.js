@@ -1,3 +1,21 @@
+async function getRecords(section_id) {
+  try {
+    response = await fetch(`/record/${section_id}`);
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getPredictRecords(section_id) {
+  try {
+    response = await fetch(`/predict_record/${section_id}`);
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function setupAccordion() {
   const bulmaCollapsibleInstances = bulmaCollapsible.attach(".is-collapsible");
   bulmaCollapsibleInstances.forEach((bulmaCollapsibleInstance) => {
@@ -5,25 +23,22 @@ function setupAccordion() {
     let chart;
     let section_id = bulmaCollapsibleInstance.element.dataset.section_id;
     let container = document.getElementById(`${section_id}-chart-div`);
-    bulmaCollapsibleInstance.on("before:expand", (event) => {
-      fetch(`/record/${section_id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+    bulmaCollapsibleInstance.on("before:expand", async (event) => {
+      records = await getRecords(section_id);
+      predict_records = await getPredictRecords(section_id);
+      console.log(records);
 
-          // Clean up container
-          container.querySelectorAll("*").forEach((n) => n.remove());
+      // Clean up container
+      container.querySelectorAll("*").forEach((n) => n.remove());
 
-          // Place content based on data
-          if (data.length > 0) {
-            chart = drawChart(container, data);
-          } else {
-            placeNoDataNotification(container);
-          }
-        });
+      // Place content based on data
+      if (records.length > 0) {
+        chart = drawChart(container, records, predict_records);
+      } else {
+        placeNoDataNotification(container);
+      }
     });
     bulmaCollapsibleInstance.on("after:collapse", (event) => {
-      // container.querySelectorAll("*").forEach((n) => n.remove());
       container.classList.remove("py-3");
       if (chart !== undefined) {
         chart.destroy();
@@ -45,13 +60,15 @@ function placeNoDataNotification(container) {
   container.classList.add("py-3");
 }
 
-function drawChart(container, data) {
+function drawChart(container, data, predict_data) {
   let ctx = document.createElement("canvas");
   ctx.classList.add("p-2");
 
   let chart = new Chart(ctx, {
     type: "line",
-    data: { datasets: [{ data: data }] },
+    data: {
+      datasets: [{ data: data }, { data: predict_data, borderDash: [20, 30] }],
+    },
     options: {
       elements: {
         point: { borderColor: "rgb(75, 192, 192)" },

@@ -24,6 +24,7 @@ class Section(Base):
     floor_name = Column(String, ForeignKey("floors.name"))
     floor = relationship("Floor", back_populates="sections")
     records = relationship("Record", back_populates="section")
+    predict_records = relationship("PredictRecord", back_populates="section")
 
     def __repr__(self) -> str:
         return f"<Section {self.title}>"
@@ -39,3 +40,15 @@ class Record(Base):
 
     def __repr__(self) -> str:
         return f"<Record of {self.section_id} at {self.timestamp}>"
+
+
+class PredictRecord(Base):
+    __tablename__ = "predict_records"
+    id = Column(Integer, primary_key=True, index=True)
+    status = Column(Integer, index=True)
+    timestamp = Column(DateTime, index=True, default=datetime.utcnow)
+    section_id = Column(Integer, ForeignKey("sections.id"))
+    section = relationship("Section", back_populates="predict_records")
+
+    def __repr__(self) -> str:
+        return f"<PredictRecord of {self.section_id} at {self.timestamp}>"

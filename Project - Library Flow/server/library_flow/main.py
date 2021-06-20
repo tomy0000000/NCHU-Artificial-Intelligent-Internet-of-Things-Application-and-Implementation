@@ -70,3 +70,8 @@ async def create_record(record: schemas.RecordCreate, db: Session = Depends(get_
 @app.get("/record/{section_id}", response_model=List[schemas.Record])
 async def read_records(section_id: int, db: Session = Depends(get_db)):
     return crud.get_records(db, section_id)
+
+
+@app.get("/predict_record/{section_id}", response_model=List[schemas.Record])
+async def read_predict_records(section_id: int, db: Session = Depends(get_db)):
+    return crud.get_predict_records(db, section_id)

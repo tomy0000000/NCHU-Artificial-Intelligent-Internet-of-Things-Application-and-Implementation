@@ -29,3 +29,11 @@ def create_record(db: Session, record: schemas.RecordCreate):
 
 def get_records(db: Session, section_id: int):
     return db.query(models.Record).filter(models.Record.section_id == section_id).all()
+
+
+def get_predict_records(db: Session, section_id: int):
+    return (
+        db.query(models.PredictRecord)
+        .filter(models.PredictRecord.section_id == section_id)
+        .all()
+    )
