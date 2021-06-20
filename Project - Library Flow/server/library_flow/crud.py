@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -31,6 +32,7 @@ def get_records(db: Session, section_id: int, limit: int = 60):
     return (
         db.query(models.Record)
         .filter(models.Record.section_id == section_id)
+        .order_by(desc(models.Record.timestamp))
         .limit(limit)
         .all()
     )
@@ -40,6 +42,7 @@ def get_predict_records(db: Session, section_id: int, limit: int = 60):
     return (
         db.query(models.PredictRecord)
         .filter(models.PredictRecord.section_id == section_id)
+        .order_by(desc(models.PredictRecord.timestamp))
         .limit(limit)
         .all()
     )
