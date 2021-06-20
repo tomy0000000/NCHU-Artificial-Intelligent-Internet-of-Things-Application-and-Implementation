@@ -67,7 +67,11 @@ function drawChart(container, data, predict_data) {
   let chart = new Chart(ctx, {
     type: "line",
     data: {
-      datasets: [{ data: data }, { data: predict_data, borderDash: [20, 30] }],
+      datasets: [
+        { data: data },
+        { data: [data[0], predict_data[0]] },
+        { data: predict_data, borderDash: [5, 5] },
+      ],
     },
     options: {
       elements: {

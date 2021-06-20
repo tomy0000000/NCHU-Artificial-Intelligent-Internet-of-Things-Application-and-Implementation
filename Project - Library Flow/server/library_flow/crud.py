@@ -42,7 +42,7 @@ def get_predict_records(db: Session, section_id: int, limit: int = 60):
     return (
         db.query(models.PredictRecord)
         .filter(models.PredictRecord.section_id == section_id)
-        .order_by(desc(models.PredictRecord.timestamp))
+        .order_by(models.PredictRecord.timestamp)
         .limit(limit)
         .all()
     )
