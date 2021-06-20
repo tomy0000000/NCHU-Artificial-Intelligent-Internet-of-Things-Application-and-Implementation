@@ -32,18 +32,17 @@ class Floor(FloorBase):
         orm_mode = True
 
 
-class RecordBase(BaseModel):
-    section_id: int
-    timestamp: datetime
-    status: int
-
-
-class Record(RecordBase):
+class Record(BaseModel):
     id: int
+    status: int
+    timestamp: datetime
+    section_id: int
 
     class Config:
         orm_mode = True
 
 
-class RecordCreate(RecordBase):
-    status: List[str]
+class RecordCreate(BaseModel):
+    section_id: int
+    device_list: Optional[List[str]] = None
+    status: Optional[int] = None
