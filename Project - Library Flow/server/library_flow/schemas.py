@@ -46,4 +46,4 @@ class Record(RecordBase):
 
 
 class RecordCreate(RecordBase):
-    pass
+    status: List[str]
