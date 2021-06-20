@@ -63,7 +63,7 @@ async def create_record(record: schemas.RecordCreate, db: Session = Depends(get_
                 status_code=422, detail="Must supply 'status' or 'device_list'"
             )
         record.status = len(set(record.device_list))
-        delattr(record, "device_list")
+    delattr(record, "device_list")
     return crud.create_record(db, record)
 
 
