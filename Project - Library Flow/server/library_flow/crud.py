@@ -27,13 +27,19 @@ def create_record(db: Session, record: schemas.RecordCreate):
     return db_record
 
 
-def get_records(db: Session, section_id: int):
-    return db.query(models.Record).filter(models.Record.section_id == section_id).all()
+def get_records(db: Session, section_id: int, limit: int = 60):
+    return (
+        db.query(models.Record)
+        .filter(models.Record.section_id == section_id)
+        .limit(limit)
+        .all()
+    )
 
 
-def get_predict_records(db: Session, section_id: int):
+def get_predict_records(db: Session, section_id: int, limit: int = 60):
     return (
         db.query(models.PredictRecord)
         .filter(models.PredictRecord.section_id == section_id)
+        .limit(limit)
         .all()
     )

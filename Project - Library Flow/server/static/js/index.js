@@ -79,7 +79,9 @@ function drawChart(container, data, predict_data) {
         xAxisKey: "timestamp",
         yAxisKey: "status",
       },
-      scales: { x: { type: "timeseries" } },
+      scales: {
+        x: { type: "time", time: { unit: "minute" } },
+      },
     },
   });
   container.appendChild(ctx);
