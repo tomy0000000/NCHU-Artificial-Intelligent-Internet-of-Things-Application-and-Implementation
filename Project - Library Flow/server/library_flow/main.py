@@ -57,8 +57,10 @@ async def create_record(record: schemas.RecordCreate, db: Session = Depends(get_
     if db_section is None:
         raise HTTPException(status_code=404, detail="Section not found")
     if not record.status:
-        if not record.device_list:
-            raise ValueError("Must supply 'status' or 'device_list'")
+        if record.device_list is None:
+            raise HTTPException(
+                status_code=422, detail="Must supply 'status' or 'device_list'"
+            )
         record.status = len(set(record.device_list))
         delattr(record, "device_list")
     return crud.create_record(db, record)
