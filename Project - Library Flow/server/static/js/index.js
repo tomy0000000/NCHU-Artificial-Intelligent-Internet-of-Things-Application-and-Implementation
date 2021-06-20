@@ -2,24 +2,54 @@ function setupAccordion() {
   const bulmaCollapsibleInstances = bulmaCollapsible.attach(".is-collapsible");
   bulmaCollapsibleInstances.forEach((bulmaCollapsibleInstance) => {
     // Check if current state is collapsed or not
-    bulmaCollapsibleInstance.on("after:expand", (event) => {
-      let section_id = event.element.dataset.section_id;
+    let chart;
+    let section_id = bulmaCollapsibleInstance.element.dataset.section_id;
+    let container = document.getElementById(`${section_id}-chart-div`);
+    bulmaCollapsibleInstance.on("before:expand", (event) => {
       fetch(`/record/${section_id}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          data.map((item) => {
-            item.timestamp = moment(item.timestamp).fromNow();
-          });
-          drawChart(section_id, data);
+
+          // Clean up container
+          container.querySelectorAll("*").forEach((n) => n.remove());
+
+          // Place content based on data
+          if (data.length > 0) {
+            chart = drawChart(container, data);
+          } else {
+            placeNoDataNotification(container);
+          }
         });
+    });
+    bulmaCollapsibleInstance.on("after:collapse", (event) => {
+      // container.querySelectorAll("*").forEach((n) => n.remove());
+      container.classList.remove("py-3");
+      if (chart !== undefined) {
+        chart.destroy();
+      }
     });
   });
 }
 
-function drawChart(section_id, data) {
-  let ctx = document.getElementById(`${section_id}-chart`).getContext("2d");
-  let stackedLine = new Chart(ctx, {
+function placeNoDataNotification(container) {
+  let notification = document.createElement("div");
+  notification.classList.add("notification");
+  notification.classList.add("is-info");
+  notification.classList.add("is-light");
+  notification.classList.add("mx-auto");
+  notification.classList.add("my-auto");
+  notification.style.width = "80%";
+  notification.innerText = "No Data";
+  container.appendChild(notification);
+  container.classList.add("py-3");
+}
+
+function drawChart(container, data) {
+  let ctx = document.createElement("canvas");
+  ctx.classList.add("p-2");
+
+  let chart = new Chart(ctx, {
     type: "line",
     data: { datasets: [{ data: data }] },
     options: {
@@ -32,8 +62,11 @@ function drawChart(section_id, data) {
         xAxisKey: "timestamp",
         yAxisKey: "status",
       },
+      scales: { x: { type: "timeseries" } },
     },
   });
+  container.appendChild(ctx);
+  return chart;
 }
 
 function ready() {
