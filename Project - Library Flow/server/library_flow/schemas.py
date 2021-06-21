@@ -4,29 +4,20 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class SectionBase(BaseModel):
+class Section(BaseModel):
+    id: int
     name: str
     status: Optional[int] = None
-
-
-class SectionUpdate(SectionBase):
-    pass
-
-
-class Section(SectionBase):
-    id: int
+    guide: Optional[int] = None
     floor_name: str
 
     class Config:
         orm_mode = True
 
 
-class FloorBase(BaseModel):
-    name: str
-
-
-class Floor(FloorBase):
+class Floor(BaseModel):
     id: int
+    name: str
     sections: List[Section] = []
 
     class Config:

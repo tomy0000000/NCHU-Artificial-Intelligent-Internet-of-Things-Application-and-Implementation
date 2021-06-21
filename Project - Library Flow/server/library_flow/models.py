@@ -21,6 +21,7 @@ class Section(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     status = Column(Integer, index=True)
+    guide = Column(String)
     floor_name = Column(String, ForeignKey("floors.name"))
     floor = relationship("Floor", back_populates="sections")
     records = relationship("Record", back_populates="section")
