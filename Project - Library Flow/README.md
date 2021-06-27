@@ -10,14 +10,18 @@
 
 Collect bluetooth devices signal around each corner in library, visualize the crowd flow, and predict trends.
 
+## Memo
+
+[HackMD](https://hackmd.io/@CKNOQd5LSQmQqa-jFESD5g/ByRJEBB3O)
+
+## Live Demo
+
+Hosted on [Heroku](https://library-flow.herokuapp.com)
+
 ## Author
 
 * Arduino - [Eddy Tan (bear3z)](https://github.com/bear3z)
 * Server - [Tomy Hsieh (tomy0000000)](https://github.com/tomy0000000)
-
-## Memo
-
-[HackMD](https://hackmd.io/@CKNOQd5LSQmQqa-jFESD5g/ByRJEBB3O)
 
 ## Acknowledgement
 
