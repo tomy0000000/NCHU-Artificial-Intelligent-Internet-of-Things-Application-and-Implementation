@@ -2,7 +2,7 @@
 name = "library-flow"
 version = "0.1.0"
 description = ""
-authors = ["Tomy Hsieh <tomy0000000@gmail.com>"]
+authors = ["Tomy Hsieh <pypi@tomy.me>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
